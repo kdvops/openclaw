@@ -1,36 +1,31 @@
 
-# KDvops Portal (Frontend)
+# OpenClaw 
 
-KDvops. Portal de automatización con utilitarios (n8n, Azure, AWS, SonarQube, Trivy, Ansible, Terraform, Azure DevOps, Argo CD, Jenkins).
+# 2) Instalar/actualizar OpenClaw en dev
+clear
+sudo helm uninstall openclaw-frontend-dev -n openclaw-dev
 
-## Requisitos
-- Node.js 20+ y npm
-- Docker
+sudo helm upgrade --install openclaw-frontend-dev \
+  /home/kalcala/openclaw/k8s/apps/openclaw/frontend/webapp \
+  -n openclaw-dev \
+  --create-namespace \
+  -f /home/kalcala/openclaw/k8s/apps/openclaw/frontend/webapp/values.yaml \
+  -f /home/kalcala/openclaw/k8s/apps/openclaw/stages/frontend/values-dev-frontend.yaml
 
-## Desarrollo local
-```bash
-npm install
-npm run dev
-# abre http://localhost:5173
-```
 
-## Build de producción
-```bash
-npm run build
-npm run preview
-```
+clear
+sudo helm uninstall openclaw-frontend-dev -n openclaw-dev
 
-## Contenedor Docker (multi-stage + Nginx)
-```bash
-docker login
-docker build -t silencfox/kdvops:latest . --push
-# docker buildx build --platform linux/arm64 -t silencfox/kdvops:arm64 . --push
-docker push silencfox/kdvops:latest
-docker run --rm -p 8080:80 silencfox/kdvops:latest
-# http://localhost:8080
-```
+sudo helm upgrade --install openclaw-frontend-dev \
+  /home/kalcala/openclaw/k8s/apps/openclaw/frontend/webapp \
+  -n openclaw-dev \
+  --create-namespace \
+  -f /home/kalcala/openclaw/k8s/apps/openclaw/frontend/webapp/values.yaml \
+  -f /home/kalcala/openclaw/k8s/apps/openclaw/stages/frontend/values-dev-frontend.yaml \
+  --set istio.enabled=false \
+  --set virtualService.enabled=false
 
-## Docker Compose
-```bash
-docker compose up -d --build
-```
+
+sudo kubectl get pods,svc,ingress -n openclaw-dev
+
+sudo kubectl get gateway -A
