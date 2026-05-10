@@ -1,7 +1,8 @@
-# Independent stage values for portal-comercial frontend (PROD)
+# Independent stage values for openclaw frontend (PROD)
 
 image:
-  tag: "1.1.2"
+  repository: ghcr.io/openclaw/openclaw
+  tag: latest
 
 service:
   strategy:
@@ -15,10 +16,10 @@ virtualService:
     - openclaw.example.com
 
 ingress:
-  tlsSecret: pc-frontend-prod-tls
+  tlsSecret: openclaw-frontend-prod-tls
   paths:
     - path: /hubs
-      service: svc-portal-comercial-prod-pc-backend-prod-webapp
+      service: svc-openclaw-prod-openclaw-backend-prod-webapp
       activeSuffix: active
       previewSuffix: preview
       port: 80

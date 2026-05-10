@@ -1,7 +1,8 @@
-# Independent stage values for portal-comercial frontend (QA)
+# Independent stage values for openclaw frontend (QA)
 
 image:
-  tag: 770475f
+  repository: ghcr.io/openclaw/openclaw
+  tag: latest
 
 service:
   strategy:
@@ -15,10 +16,10 @@ virtualService:
     - openclaw.qa.example.com
 
 ingress:
-  tlsSecret: pc-frontend-qa-tls
+  tlsSecret: openclaw-frontend-qa-tls
   paths:
     - path: /hubs
-      service: svc-portal-comercial-qa-pc-backend-qa-webapp
+      service: svc-openclaw-qa-openclaw-backend-qa-webapp
       activeSuffix: active
       previewSuffix: preview
       port: 80

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: pc-backend
+  name: openclaw-backend
   namespace: argocd
 spec:
   project: default
@@ -9,15 +9,15 @@ spec:
   sources:
 
     # 🔹 Source 1 → Namespace
-    - repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+    - repoURL: https://github.com/kdvops/openclaw.git
       targetRevision: main
-      path: k8s/apps/portal-comercial/Backend/namespace/
+      path: k8s/apps/openclaw/backend/namespace/
 
 
     # 🔹 Source 2 → Helm App
-    - repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+    - repoURL: https://github.com/kdvops/openclaw.git
       targetRevision: main
-      path: k8s/apps/portal-comercial/Backend/webapp
+      path: k8s/apps/openclaw/backend/webapp
       helm:
         valueFiles:
           - values.yaml
@@ -27,7 +27,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: portal-comercial-bsc
+    namespace: openclaw
 
   syncPolicy:
     automated:

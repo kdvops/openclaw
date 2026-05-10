@@ -1,19 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: portal-comercial-kargo-config
+  name: openclaw-kargo-config
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "20"
 spec:
   project: default
   source:
-    repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+    repoURL: https://github.com/kdvops/openclaw.git
     targetRevision: main
-    path: kargo/kargo-yaml/portal-comercial
+    path: kargo/kargo-yaml/openclaw
   destination:
     server: https://kubernetes.default.svc
-    namespace: portal-comercial
+    namespace: openclaw
   syncPolicy:
     automated:
       prune: true

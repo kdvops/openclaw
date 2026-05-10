@@ -1,7 +1,8 @@
-# Independent stage values for portal-comercial frontend (DEV)
+# Independent stage values for openclaw frontend (DEV)
 
 image:
-  tag: 202605061055-f3ea49a1
+  repository: ghcr.io/openclaw/openclaw
+  tag: latest
 
 service:
   strategy:
@@ -15,10 +16,10 @@ virtualService:
     - openclaw.kdvops.com
 
 ingress:
-  tlsSecret: pc-frontend-dev-tls
+  tlsSecret: openclaw-frontend-dev-tls
   paths:
     - path: /hubs
-      service: svc-portal-comercial-dev-pc-backend-dev-webapp
+      service: svc-openclaw-dev-openclaw-backend-dev-webapp
       activeSuffix: active
       previewSuffix: preview
       port: 80

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: portal-comercial-stages-config
+  name: openclaw-stages-config
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,9 +10,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+    repoURL: https://github.com/kdvops/openclaw.git
     targetRevision: main
-    path: argocd/apps/portal-comercial/stages/kustomize/namespaces
+    path: argoCD/apps/openclaw/stages/kustomize/namespaces
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

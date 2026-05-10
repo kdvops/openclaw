@@ -1,23 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: pc-mssql
+  name: openclaw-mssql
   namespace: argocd
 spec:
   project: default
 
   source:
-    repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+    repoURL: https://github.com/kdvops/openclaw.git
     #targetRevision: HEAD
     targetRevision: main
-    path: k8s/apps/portal-comercial/mssql
+    path: k8s/apps/openclaw/mssql
     directory:
       recurse: true
       jsonnet: {}
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: portal-comercial-bsc
+    namespace: openclaw
 
   syncPolicy:
     automated:

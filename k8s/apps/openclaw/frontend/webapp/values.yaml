@@ -7,13 +7,13 @@ replicaCount: 1
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: "nexus.local.bsc.com/docker-hosted/bsc.openclaw.frontend"
+  repository: "ghcr.io/openclaw/openclaw"
 
   # This sets the pull policy for images. : Always | IfNotPresent | Never
   pullPolicy: Always
   
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "770475f"
+  tag: "latest"
 
   
 
@@ -134,7 +134,7 @@ ingress:
   
   paths:
     - path: /hubs
-      service: svc-portal-comercial-bsc-pc-backend-webapp
+      service: svc-openclaw-openclaw-backend-webapp
       activeSuffix: active          # 👉 backend activo sin sufijo
       previewSuffix: preview    # 👉 backend preview
       port: 80

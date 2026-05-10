@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: portal-comercial-frontend-stages
+  name: openclaw-frontend-stages
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "10"
@@ -14,41 +14,37 @@ spec:
         elements:
           - stage: dev
             url: https://kubernetes.default.svc
-            namespace: portal-comercial-dev
-            valuesPath: k8s/apps/portal-comercial/stages/frontend/values-dev-frontend.yaml
-          - stage: next
+            namespace: openclaw-dev
+            valuesPath: k8s/apps/openclaw/stages/frontend/values-dev-frontend.yaml
+          - stage: qa
             url: https://kubernetes.default.svc
-            namespace: portal-comercial-next
-            valuesPath: k8s/apps/portal-comercial/stages/frontend/values-next-frontend.yaml
-          #- stage: qa
-          #  url: https://kubernetes.default.svc
-          #  namespace: portal-comercial-qa
-          #  valuesPath: k8s/apps/portal-comercial/stages/frontend/values-qa-frontend.yaml
-          #- stage: prod
-          #  url: https://kubernetes.default.svc
-          #  namespace: portal-comercial-prod
-          #  valuesPath: k8s/apps/portal-comercial/stages/frontend/values-prod-frontend.yaml
+            namespace: openclaw-qa
+            valuesPath: k8s/apps/openclaw/stages/frontend/values-qa-frontend.yaml
+          - stage: prod
+            url: https://kubernetes.default.svc
+            namespace: openclaw-prod
+            valuesPath: k8s/apps/openclaw/stages/frontend/values-prod-frontend.yaml
   template:
     metadata:
-      name: 'pc-frontend-{{.stage}}-frontend'
+      name: 'openclaw-frontend-{{.stage}}-frontend'
       namespace: argocd
       annotations:
-        kargo.akuity.io/authorized-stage: 'portal-comercial:{{.stage}}-frontend'
+        kargo.akuity.io/authorized-stage: 'openclaw:{{.stage}}-frontend'
     spec:
       project: default
       sources:
-        - repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+        - repoURL: https://github.com/kdvops/openclaw.git
           targetRevision: main
-          path: k8s/apps/portal-comercial/FrontEnd/webapp
+          path: k8s/apps/openclaw/frontend/webapp
           helm:
-            releaseName: pc-frontend-{{.stage}}
+            releaseName: openclaw-frontend-{{.stage}}
             valueFiles:
               - values.yaml
               - '$values/{{.valuesPath}}'
             parameters:
               - name: fullnameOverride
                 value: frontend
-        - repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+        - repoURL: https://github.com/kdvops/openclaw.git
           targetRevision: main
           ref: values
       destination:

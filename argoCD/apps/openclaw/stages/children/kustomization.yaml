@@ -3,6 +3,4 @@ kind: Kustomization
 
 resources:
   - config-application.yaml
-  - backend-applicationset.yaml
   - frontend-applicationset.yaml
-  - kargo-application.yaml
