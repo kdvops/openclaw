@@ -134,9 +134,9 @@ ingress:
   
   paths:
     - path: /hubs
-      service: svc-openclaw-openclaw-backend-webapp
-      activeSuffix: active          # 👉 backend activo sin sufijo
-      previewSuffix: preview    # 👉 backend preview
+      service: ''
+      activeSuffix: active
+      previewSuffix: preview
       port: 80
 
     - path: /

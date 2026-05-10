@@ -16,20 +16,18 @@ spec:
             url: https://kubernetes.default.svc
             namespace: openclaw-dev
             valuesPath: k8s/apps/openclaw/stages/frontend/values-dev-frontend.yaml
-          - stage: qa
-            url: https://kubernetes.default.svc
-            namespace: openclaw-qa
-            valuesPath: k8s/apps/openclaw/stages/frontend/values-qa-frontend.yaml
-          - stage: prod
-            url: https://kubernetes.default.svc
-            namespace: openclaw-prod
-            valuesPath: k8s/apps/openclaw/stages/frontend/values-prod-frontend.yaml
+          #- stage: qa
+          #  url: https://kubernetes.default.svc
+          #  namespace: openclaw-qa
+          #  valuesPath: k8s/apps/openclaw/stages/frontend/values-qa-frontend.yaml
+          #- stage: prod
+          #  url: https://kubernetes.default.svc
+          #  namespace: openclaw-prod
+          #  valuesPath: k8s/apps/openclaw/stages/frontend/values-prod-frontend.yaml
   template:
     metadata:
       name: 'openclaw-frontend-{{.stage}}-frontend'
       namespace: argocd
-      annotations:
-        kargo.akuity.io/authorized-stage: 'openclaw:{{.stage}}-frontend'
     spec:
       project: default
       sources:

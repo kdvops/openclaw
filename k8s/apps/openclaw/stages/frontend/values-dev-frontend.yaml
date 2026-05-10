@@ -19,7 +19,7 @@ ingress:
   tlsSecret: openclaw-frontend-dev-tls
   paths:
     - path: /hubs
-      service: svc-openclaw-dev-openclaw-backend-dev-webapp
+      service: ""
       activeSuffix: active
       previewSuffix: preview
       port: 80
