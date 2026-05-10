@@ -1,0 +1,65 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: portal-comercial-backend-stages
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+  generators:
+    - list:
+        elements:
+          - stage: dev
+            url: https://kubernetes.default.svc
+            namespace: portal-comercial-dev
+            valuesPath: k8s/apps/portal-comercial/stages/backend/values-dev-backend.yaml
+          - stage: next
+            url: https://kubernetes.default.svc
+            namespace: portal-comercial-next
+            valuesPath: k8s/apps/portal-comercial/stages/backend/values-next-backend.yaml
+          #- stage: qa
+          #  url: https://kubernetes.default.svc
+          #  namespace: portal-comercial-qa
+          #  valuesPath: k8s/apps/portal-comercial/stages/backend/values-qa-backend.yaml
+          #- stage: prod
+          #  url: https://kubernetes.default.svc
+          #  namespace: portal-comercial-prod
+          #  valuesPath: k8s/apps/portal-comercial/stages/backend/values-prod-backend.yaml
+  template:
+    metadata:
+      name: 'pc-backend-{{.stage}}-backend'
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: 'portal-comercial:{{.stage}}-backend'
+    spec:
+      project: default
+      sources:
+        - repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+          targetRevision: main
+          path: k8s/apps/portal-comercial/Backend/webapp
+          helm:
+            releaseName: pc-backend-{{.stage}}
+            valueFiles:
+              - values.yaml
+              - '$values/{{.valuesPath}}'
+            parameters:
+              - name: fullnameOverride
+                value: backend
+        - repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+          targetRevision: main
+          ref: values
+      destination:
+        server: '{{.url}}'
+        namespace: '{{.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          enabled: true
+        syncOptions:
+          - CreateNamespace=true
+          - PruneLast=true
+          - ServerSideApply=true

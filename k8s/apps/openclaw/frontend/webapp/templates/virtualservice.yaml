@@ -1,0 +1,53 @@
+{{- if .Values.virtualService.enabled }}
+{{- $root := . }}
+
+{{- range $strategy := .Values.service.strategy }}
+{{- $vsAnnotations := mergeOverwrite (deepCopy ($root.Values.virtualService.annotations | default dict)) (dict "external-dns.alpha.kubernetes.io/hostname" $strategy.host) }}
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: {{ $strategy.name }}-virtual-svc-{{ include "webapp.fullname" $root }}
+  namespace: {{ $root.Release.Namespace }}
+  {{- with $vsAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  hosts:
+    - "{{ $strategy.host }}"
+
+  gateways:
+    - {{ $root.Values.virtualService.gateway.namespace }}/{{ $root.Values.virtualService.gateway.name }}
+
+  http:
+{{- range $path := $root.Values.ingress.paths }}
+
+    - match:
+        - uri:
+            prefix: {{ $path.path }}
+
+      route:
+        - destination:
+
+{{- /* lógica de active / preview */}}
+{{- $suffix := "" }}
+{{- if eq $strategy.name "active" }}
+{{- $suffix = $path.activeSuffix }}
+{{- else }}
+{{- $suffix = $path.previewSuffix }}
+{{- end }}
+
+{{- $defaultName := include "webapp.svcName" $root }}
+{{- $svc := trim $path.service }}
+{{- $serviceName := default $defaultName $svc }}
+
+{{- $finalName := printf "%s-%s" $suffix $serviceName }}
+
+            host: {{ $finalName }}.{{ $root.Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+
+{{- end }}
+---
+{{- end }}
+{{- end }}

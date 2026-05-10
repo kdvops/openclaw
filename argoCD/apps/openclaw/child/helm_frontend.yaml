@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pc-frontend
+  namespace: argocd
+spec:
+  project: default
+
+  sources:
+
+    # 🔹 Source 1 → Namespace
+    - repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+      targetRevision: main
+      path: k8s/apps/portal-comercial/FrontEnd/namespace/
+
+
+    # 🔹 Source 2 → Helm App
+    - repoURL: https://BMSC@dev.azure.com/BMSC/Infrastructura/_git/ArgoCD
+      targetRevision: main
+      path: k8s/apps/portal-comercial/FrontEnd/webapp
+      helm:
+        valueFiles:
+          - values.yaml
+        parameters:
+          - name: fullnameOverride
+            value: frontend
+
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: portal-comercial-bsc
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+      enabled: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+      - ServerSideApply=true

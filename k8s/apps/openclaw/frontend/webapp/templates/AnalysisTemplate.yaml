@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: {{ include "webapp.atName" . }}
+spec:
+  args:
+    - name: service-name
+    - name: service-port
+    - name: path
+  metrics:
+    - name: http-check
+      interval: 5s
+      count: 3
+      failureLimit: 2
+      #successCondition: result >= 200 && result < 400
+      successCondition: response.statusCode >= 200 && response.statusCode < 400
+      provider:
+        web:
+          url: http://{{`{{args.service-name}}`}}:{{`{{args.service-port}}`}}{{`{{args.path}}`}}
+          timeoutSeconds: 5

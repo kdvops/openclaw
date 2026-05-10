@@ -1,0 +1,28 @@
+{{- $root := . }}
+
+{{- range $strategy := .Values.service.strategy }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $strategy.name }}-{{ include "webapp.svcName" $root }}
+  #name: svc-{{ include "webapp.fullname" $root }}-{{ $strategy.name }}
+  labels:
+    {{- include "webapp.labels" $root | nindent 4 }}
+
+spec:
+  type: {{ $root.Values.service.type }}
+
+  ports:
+    - name: http
+      port: {{ $root.Values.service.svcPort }}
+      targetPort: {{ $root.Values.service.podPort }}
+      protocol: TCP
+
+  {{- if not $root.Values.rollout.enabled }}
+  selector:
+    app.kubernetes.io/name: {{ include "webapp.name" $root }}
+    app.kubernetes.io/instance: {{ $root.Release.Name }}
+  {{- end }}
+
+{{- end }}

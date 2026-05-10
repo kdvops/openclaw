@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: portal-comercial-dev
+  labels:
+    environment: dev
+    istio-injection: enabled
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: portal-comercial-qa
+  labels:
+    environment: qa
+    istio-injection: enabled
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: portal-comercial-next
+  labels:
+    environment: next
+    istio-injection: enabled
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: portal-comercial-prod
+  labels:
+    environment: prod
+    istio-injection: enabled
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"

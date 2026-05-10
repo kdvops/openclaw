@@ -1,0 +1,38 @@
+# Independent stage values for portal-comercial frontend (PROD)
+
+image:
+  tag: "1.1.2"
+
+service:
+  strategy:
+    - name: active
+      host: openclaw.example.com
+    - name: preview
+      host: preview-openclaw.example.com
+
+virtualService:
+  hosts:
+    - openclaw.example.com
+
+ingress:
+  tlsSecret: pc-frontend-prod-tls
+  paths:
+    - path: /hubs
+      service: svc-portal-comercial-prod-pc-backend-prod-webapp
+      activeSuffix: active
+      previewSuffix: preview
+      port: 80
+    - path: /
+      service: ""
+      activeSuffix: active
+      previewSuffix: preview
+      port: 80
+
+configmap:
+  data:
+    APP_ENV: prod
+    API_BASE_URL: /graphql
+
+env:
+  - name: TEST
+    value: ""

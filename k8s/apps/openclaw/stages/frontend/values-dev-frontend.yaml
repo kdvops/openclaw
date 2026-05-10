@@ -1,0 +1,39 @@
+# Independent stage values for portal-comercial frontend (DEV)
+
+image:
+  tag: 202605061055-f3ea49a1
+
+service:
+  strategy:
+    - name: active
+      host: openclaw.kdvops.com
+    - name: preview
+      host: preview-openclaw.kdvops.com
+
+virtualService:
+  hosts:
+    - openclaw.kdvops.com
+
+ingress:
+  tlsSecret: pc-frontend-dev-tls
+  paths:
+    - path: /hubs
+      service: svc-portal-comercial-dev-pc-backend-dev-webapp
+      activeSuffix: active
+      previewSuffix: preview
+      port: 80
+    - path: /
+      service: ""
+      activeSuffix: active
+      previewSuffix: preview
+      port: 80
+
+configmap:
+  data:
+    APP_ENV: dev
+    API_BASE_URL: /graphql
+
+env:
+  - name: TEST
+    value: ""
+

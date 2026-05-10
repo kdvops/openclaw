@@ -1,0 +1,54 @@
+{{- if .Values.ingress.enabled }}
+{{- $root := . }}
+
+{{- range $strategy := .Values.service.strategy }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  #name: ing-{{ $root.Release.Name }}-{{ $strategy.name }}
+  name: {{ $strategy.name }}-{{ include "webapp.ingName" $root }}
+  {{- with $root.Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ $root.Values.ingress.className }}
+
+  tls:
+    - hosts:
+        - {{ $strategy.host }}
+      #secretName: {{ $root.Values.ingress.tlsSecret }}
+      secretName: {{ $strategy.name }}-{{ $root.Values.ingress.tlsSecret }}
+
+  rules:
+    - host: {{ $strategy.host }}
+      http:
+        paths:
+  {{- range $path := $root.Values.ingress.paths }}
+
+          - path: {{ $path.path }}
+            pathType: Prefix
+            backend:
+              service:
+  {{- $suffix := "" }}
+  {{- if eq $strategy.name "active" }}
+  {{- $suffix = $path.activeSuffix }}
+  {{- else }}
+  {{- $suffix = $path.previewSuffix }}
+  {{- end }}
+
+  {{- $defaultName := include "webapp.svcName" $root }}
+  {{- $svc := trim $path.service }}
+  {{- $serviceName := default $defaultName $svc }}
+
+  {{- $finalName := printf "%s%s" (ternary (printf "%s-" $suffix) "" (ne $suffix "")) $serviceName }}
+  {{- $backendPort := coalesce $path.svcPort $root.Values.service.svcPort $path.port }}
+
+                name: {{ $finalName }}
+                port:
+                  number: {{ $backendPort }}
+
+{{- end }}
+---
+{{- end }}
+{{- end }}
