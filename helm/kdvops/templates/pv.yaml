@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "kdvops.fullname" . }}-pv
+spec:
+  capacity: { storage: 1Gi }
+  accessModes: ["ReadWriteMany"]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath: { path: /srv/downloads/rpms }

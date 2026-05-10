@@ -1,0 +1,19 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: kdvops-mtls
+  namespace: kdvops-ns
+spec:
+  mtls:
+    mode: STRICT # PERMISSIVE | STRICT | DISABLE 
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: kdvops
+  namespace: kdvops-ns
+spec:
+  host: kdvops-web-svc.kdvops-ns.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL     # DISABLE |  ISTIO_MUTUAL | SIMPLE

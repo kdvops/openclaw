@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: kdvops-web
+  namespace: kdvops-ns
+spec:
+  replicas: 2
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: kdvops-web
+  template:
+    metadata:
+      labels:
+        app: kdvops-web
+        version: "1.5"
+    spec:
+      containers:
+        - name: kdvops-web
+          image: silencfox/kdvops:arm64
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          volumeMounts:
+            - name: media
+              mountPath: /usr/share/nginx/html/data
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: kdvops-pvc
+
+  strategy:
+    canary:
+      steps:
+        - setWeight: 25
+        - pause: { duration: 30s }
+        - setWeight: 50
+        - pause: { duration: 1m }
+        - setWeight: 100

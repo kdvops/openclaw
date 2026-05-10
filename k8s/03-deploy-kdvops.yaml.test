@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kdvops-web
+  namespace: kdvops-ns
+spec:
+  selector:
+    matchLabels:
+      app: kdvops-web
+  template:
+    metadata:
+      labels:
+        app: kdvops-web
+    spec:
+      # ?? Tolerancia para permitir ejecutar en nodo con taint "dedicated=master:NoExecute"
+      tolerations:
+        - key: "master"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+      # ?? Opcional: asegurar que se ejecute específicamente en el nodo master
+      nodeSelector:
+        kubernetes.io/hostname: raspberrypi  # cambia por el nombre real de tu nodo
+      containers:
+      #- image: nginx
+      - image: silencfox/kdvops:arm64
+        name: kdvops-web
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - { name: media, mountPath: /usr/share/nginx/html/data }         # RW (graba DVR)
+      volumes:
+        - { name: media, persistentVolumeClaim: { claimName: kdvops-pvc } }

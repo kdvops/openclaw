@@ -1,0 +1,8 @@
+
+services:
+  kdvops-portal:
+    build: .
+    image: kdvops/portal:latest
+    ports:
+      - "8080:80"
+    restart: unless-stopped
