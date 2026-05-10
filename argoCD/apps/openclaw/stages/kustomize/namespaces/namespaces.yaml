@@ -7,33 +7,23 @@ metadata:
     istio-injection: enabled
   annotations:
     argocd.argoproj.io/sync-wave: "0"
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: openclaw-qa
-  labels:
-    environment: qa
-    istio-injection: enabled
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: openclaw-next
-  labels:
-    environment: next
-    istio-injection: enabled
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: openclaw-prod
-  labels:
-    environment: prod
-    istio-injection: enabled
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
+# ---
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: openclaw-qa
+#   labels:
+#     environment: qa
+#     istio-injection: enabled
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "0"
+# ---
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: openclaw-prod
+#   labels:
+#     environment: prod
+#     istio-injection: enabled
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "0"
