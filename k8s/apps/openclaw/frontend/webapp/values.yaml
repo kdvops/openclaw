@@ -54,7 +54,7 @@ podLabels: {}
 podSecurityContext:
   fsGroup: 1001
 
-securityContext: {}
+
 securityContext:
   runAsUser: 1001
   runAsGroup: 1001
@@ -84,9 +84,9 @@ istio:
 virtualService:
   enabled: true
   hosts:
-    - istio-openclaw.kdvops.com
+    - openclaw.kdvops.com
   gateway:
-    name: bmsc-dev-gateway
+    name: istio-system/kdvops-gateway
     namespace: istio-system
   annotations: {}
     #external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
