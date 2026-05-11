@@ -1,3 +1,4 @@
+docker exec -it openclaw cat /home/node/.openclaw/openclaw.json
 
 # OpenClaw 
 
